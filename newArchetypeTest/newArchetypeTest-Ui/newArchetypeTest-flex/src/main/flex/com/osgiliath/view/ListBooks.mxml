@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		 >
+	<fx:Metadata>[Name("listBooks")]</fx:Metadata>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.osgiliath.model.Book;
+			import com.osgiliath.services.BookFlexService;
+			
+			import mx.collections.ArrayCollection;
+			
+			import org.granite.tide.events.TideResultEvent;
+			import org.granite.tide.spring.Context;
+			
+			[In]
+			public var tideContext:Context;
+			[In]
+			public var bookService:BookFlexService;
+			private var _allBooks:ArrayCollection;
+
+			[Bindable(event = "allBooksChanged")]
+			[In]
+			public function get allBooks():ArrayCollection
+			{
+				return _allBooks;
+			}
+
+			public function set allBooks(value:ArrayCollection):void
+			{
+				_allBooks = value;
+				dispatchEvent(new Event("allBooksChanged"));
+			}
+
+			[Observer("listBooks")]
+			public function listAllBooks():void {
+				bookService.getAll(gotAllBooks);
+			}
+			public function gotAllBooks(event:TideResultEvent):void {
+				allBooks = ArrayCollection(event.result);
+			}
+			[Observer("removeBook")]
+			public function remove(book :Book):void {
+				bookService.remove(book.id);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<mx:DataGrid dataProvider="{allBooks}" id = "lBooks">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Id" dataField="id"/>
+			<mx:DataGridColumn headerText="Title" dataField="title"/>
+			<mx:DataGridColumn headerText="Update">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:Button icon="@Embed(source='/../../../assets/icons/add.png')" click="outerDocument.tideContext.raiseEvent('navigateToEditBook', outerDocument.lBooks.selectedItem)">
+							
+						</mx:Button>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			<mx:DataGridColumn headerText="Delete">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:Button icon="@Embed(source='/../../../assets/icons/delete.png')" click="outerDocument.tideContext.raiseEvent('removeBook', outerDocument.lBooks.selectedItem)">
+							
+						</mx:Button>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Button icon="@Embed(source='/../../../assets/icons/add.png')"  click="tideContext.raiseEvent('navigateToAddBook')"/>
+</s:Group>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+
+    <services>
+        <service id="granite-service"
+            class="flex.messaging.services.RemotingService"
+            messageTypes="flex.messaging.messages.RemotingMessage">
+           <!--  <adapters>
+				<adapter-definition id="simple"
+					class="org.granite.gravity.adapters.SimpleServiceAdapter" />
+			</adapters> -->
+            <!--
+             ! Use "tideSpringFactory" and "graniteamf" for "spring" destination (see
+             ! below). The destination must be "spring" when using Tide with default
+             ! configuration.
+             !-->
+            <destination id="spring">
+                <channels>
+                    <channel ref="graniteamf"/>
+                </channels>
+                <properties>
+                    <factory>tideSpringFactory</factory>
+                    <entityManagerFactoryBeanName>
+                        entityManagerFactory
+                    </entityManagerFactoryBeanName>
+                </properties>
+              <!--   <adapter ref="simple" /> -->
+            </destination>
+        </service>
+    </services>
+
+    <!--
+     ! Declare tideSpringFactory service factory.
+     !-->
+    <factories>
+        <factory id="tideSpringFactory"
+            class="org.granite.tide.spring.SpringServiceFactory" />
+    </factories>
+
+    <!--
+     ! Declare my-graniteamf channel.
+     !-->
+    <channels>
+        <channel-definition id="graniteamf" class="mx.messaging.channels.AMFChannel">
+            <endpoint
+                uri="http://{server.name}:{server.port}/{context.root}/graniteamf/amf"
+                class="flex.messaging.endpoints.AMFEndpoint"/>
+        </channel-definition>
+    </channels>
+
+</services-config>

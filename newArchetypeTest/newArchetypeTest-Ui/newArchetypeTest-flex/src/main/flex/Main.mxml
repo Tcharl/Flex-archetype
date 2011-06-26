@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:view="com.osgiliath.view.*"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   preinitialize="{preinit()}"
+			   creationComplete="{init()}"
+			   minWidth="955" minHeight="600">
+	<!-- preinitialize="Spring.getInstance().initApplication()"-->
+	<fx:Script>
+		<![CDATA[
+			import com.osgiliath.view.EditAuthor;
+			import com.osgiliath.view.EditBook;
+			import com.osgiliath.view.EntityManipulation;
+			import com.osgiliath.view.ListAuthors;
+			import com.osgiliath.view.ListBooks;
+			
+			import org.granite.tide.Component;
+			import org.granite.tide.data.DataObserver;
+			import org.granite.tide.events.TideResultEvent;
+			import org.granite.tide.service.DefaultServiceInitializer;
+			import org.granite.tide.spring.Context;
+			import org.granite.tide.spring.Spring;
+			// init tide context
+			[Bindable]
+			public var tideContext:Context=Spring.getInstance().getSpringContext();
+			// ----------------------------------------------------------------
+			// init stuff
+			// ----------------------------------------------------------------
+			
+			private function preinit():void
+			{
+				Spring.getInstance().initApplication();
+				Spring.getInstance().addComponent("libraryTopic", DataObserver);
+				Spring.getInstance().addComponentWithFactory("serviceInitializer", DefaultServiceInitializer, {contextRoot: "/newArchetypeTest-flexServer"});
+				Spring.getInstance().addComponents([EditAuthor, EditBook, EntityManipulation, ListAuthors, ListBooks, MainView]);
+			}
+			
+			private function init():void
+			{
+				// client server synchronization init
+				tideContext.spring.subscribe();
+			}
+//		[PostContruct]			
+//		private function init():void {
+//			// Define service endpoint resolver
+//			Spring.getInstance().getSpringContext().serviceInitializer = new DefaultServiceInitializer('/newArchetypeTest-flexServer');
+//			
+//			// Configuration for data push observer subscribed upon login/logout
+//			// Remove if not using DataObserver
+//			Spring.getInstance().addComponent("libraryTopic", DataObserver);
+////				
+////				Spring.getInstance().initApplication();
+//				//Spring.getInstance().getSpringContext().serviceInitializer = new DefaultServiceInitializer('/newArchetypeTest-flexServer');
+////				Spring.getInstance().addComponent("graniteTopic", DataObserver);
+//				Spring.getInstance().addComponents([EditAuthor, EditBook, EntityManipulation, ListAuthors, ListBooks, MainView]);
+////				
+//			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+		<!-- Placer ici les elements non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<view:MainView id="mainView"/>
+</s:Application>

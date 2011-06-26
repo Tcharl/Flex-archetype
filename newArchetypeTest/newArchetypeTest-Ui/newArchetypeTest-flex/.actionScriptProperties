@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties analytics="false" mainApplicationPath="Main.mxml" projectUUID="7f1a8dea-9d90-4cd4-84e3-99b3eef09d63" version="10">
+  <compiler additionalCompilerArguments="-locale en_US -keep-as3-metadata=Bindable,Managed,ChangeEvent,NonCommittingChangeEvent,Transient,Name,In,Out,Observer,Destroy,Version,Event&#13;&#10;-include-libraries ${M2_REPO}/org\graniteds\granite-essentials-swc\2.2.0.SP2/granite-essentials-swc-2.2.0.SP2.swc&#13;&#10;-services ${DOCUMENTS}/newArchetypeTest/newArchetypeTest-java/newArchetypeTest-flexServer/src/main/webapp/WEB-INF/flex/services-config.xml&#13;&#10;-context-root /newArchetypeTest-flexServer" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="D:/indigo-workspace/newArchetypeTest/newArchetypeTest-java/newArchetypeTest-flexServer/src/main/webapp" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src/main/flex" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+    <compilerSourcePath>
+      <compilerSourcePathEntry kind="1" linkType="1" path="target/generated-sources"/>
+    </compilerSourcePath>
+    <libraryPath defaultLinkType="1">
+      <libraryPathEntry kind="4" path="">
+        <excludedEntries>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
+        </excludedEntries>
+      </libraryPathEntry>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
+    </libraryPath>
+    <sourceAttachmentPath/>
+  </compiler>
+  <applications>
+    <application path="Main.mxml"/>
+  </applications>
+  <modules/>
+  <buildCSSFiles/>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
+</actionScriptProperties>

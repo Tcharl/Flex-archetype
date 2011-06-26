@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>newArchetypeTest-java</artifactId>
+		<groupId>com.osgiliath</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>newArchetypeTest-flexServer</artifactId>
+	<packaging>war</packaging>
+	<build>
+		<finalName>newArchetypeTest-flexServer</finalName>
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<version>3.8</version>
+				<configuration>
+					<stripVersion>true</stripVersion>
+					<webappDirectory>${basedir}/src/main/webapp</webappDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>copy-flex-resources</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.osgiliath</groupId>
+									<artifactId>newArchetypeTest-flex</artifactId>
+									<type>swf</type>
+									<overWrite>true</overWrite>
+									<destFileName>Main.swf</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.osgiliath</groupId>
+			<artifactId>newArchetypeTest-flexServices</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osgiliath</groupId>
+			<artifactId>newArchetypeTest-flex</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+			<type>swf</type>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+	</dependencies>
+</project>

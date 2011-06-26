@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" height="100%">
+	<fx:Metadata>[Name("bookCtl")]</fx:Metadata>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.osgiliath.model.Author;
+			import com.osgiliath.model.Book;
+			import com.osgiliath.services.AuthorFlexService;
+			import com.osgiliath.services.BookFlexService;
+			
+			import mx.collections.ArrayCollection;
+			
+			import org.granite.tide.events.TideResultEvent;
+			import org.granite.tide.spring.Context;
+			private var _book:Book;
+			private var _allAuthors:ArrayCollection;
+			[In]
+			public var tideContext:Context;
+			[In]
+			public var bookService:BookFlexService;
+		
+			[In]
+			public var authorService:AuthorFlexService;
+			
+			[In]
+			[Out]
+			[Bindable(event="bookChanged")]
+			public function get book():Book
+			{
+				return _book;
+			}
+
+			public function set book(value:Book):void
+			{
+				_book = value;
+				dispatchEvent(new Event("bookChanged"));
+			}
+
+			[In]
+			[Bindable(event="allAuthorsChanged")]
+			public function get allAuthors():ArrayCollection
+			{
+				return _allAuthors;
+			}
+
+			public function set allAuthors(value:ArrayCollection):void
+			{
+				_allAuthors = value;
+				dispatchEvent(new Event("allAuthorsChanged"));
+			}
+
+			[Observer("addNewBook")]
+			public function createBook():void {
+				bookService.createNew(affectBook);
+				authorService.getAll(gotAllAuthors);
+				
+			}
+			public function affectBook(event:TideResultEvent):void {
+				book = Book(event.result);
+				dispatchEvent(new Event("bookChanged"));
+			}
+			public function gotAllAuthors(event:TideResultEvent):void {
+				allAuthors = ArrayCollection(event.result);
+				dispatchEvent(new Event("bookChanged"));
+			}
+			[Observer("editBook")]
+			public function editBook(book:Book):void {
+				bookService.findById(book.id, affectBook);	
+				authorService.getAll(gotAllAuthors);
+			}
+			
+			[Observer("persistBook")]
+			public function addBook():void {
+				if (selectedAuthor.selectedIndex != -1) {
+					book.author = selectedAuthor[selectedAuthor.selectedIndex];
+				}
+				bookService.save(book, affectBook);
+				
+			}
+			[Bindable(event="bookChanged")]
+			private function getSelectedIndex():int {
+				if (book != null) {
+					if (book.author != null) {
+						var i : int = 0;
+						for each (var author:Author in allAuthors) {
+							if (book.author.id == author.id) {
+								return i;
+							}
+							i++;
+						}
+					} 
+				}
+				return -1;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<mx:Form width="100%">
+		<mx:FormItem label="Title">
+			<s:TextInput text="@{book.title}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Author">
+			<s:ComboBox dataProvider="{allAuthors}" id="selectedAuthor"
+						selectedIndex="{getSelectedIndex()}" labelField="id"/>
+		</mx:FormItem>
+		<mx:FormItem label="Add">
+			<s:Button label="Click here" click="{tideContext.raiseEvent('persistBook')}"/>
+		</mx:FormItem>
+	</mx:Form>
+</s:Group>

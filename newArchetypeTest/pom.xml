@@ -1,0 +1,228 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.osgiliath</groupId>
+	<artifactId>newArchetypeTest</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>new version of the archetype</name>
+	<repositories>
+		<!-- Repository for flex mojos libs -->
+		<repository>
+			<id>flex-mojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>jboss public</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
+		<repository>
+			<id>spring-milestone</id>
+			<name>Spring Maven MILESTONE Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+		</repository>
+		<!-- Atomikos transactions repository -->
+		<repository>
+			<id>atomikos</id>
+			<name>Atomikos Release Repository</name>
+			<url>http://oss.sonatype.org/content/repositories/comatomikos-083</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<!-- Repository for flex mojos libs -->
+		<pluginRepository>
+			<id>flex-mojos-repository</id>
+			<url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>codehaus-snapshots</id>
+			<url>http://nexus.codehaus.org/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+	<build>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.codehaus.cargo</groupId>
+					<artifactId>cargo-maven2-plugin</artifactId>
+					<version>1.1.2-SNAPSHOT</version>
+					<executions>
+						<execution>
+							<id>start-container</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>start</goal>
+							</goals>
+						</execution>
+						<!-- Stop instruction is made by an ant script (due to selenium HQ -->
+						<!-- <execution> <id>stop-container</id> <phase>post-integration-test</phase> 
+							<goals> <goal>stop</goal> </goals> </execution> -->
+					</executions>
+					<configuration>
+						<wait>${tomcat.wait}</wait>
+						<container>
+							<containerId>tomcat6x</containerId>
+							<zipUrlInstaller>
+								<url>http://mir2.ovh.net/ftp.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</url>
+								<installDir>${java.io.tmpdir}/downloadedByCargo</installDir>
+							</zipUrlInstaller>
+						</container>
+						<configuration>
+							<type>standalone</type>
+							<home>${project.build.directory}/tomcat</home>
+							<properties>
+								<cargo.hostname>localhost</cargo.hostname>
+								<cargo.servlet.port>${server.port}</cargo.servlet.port>
+							</properties>
+						</configuration>
+					</configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											aspectj-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.3,)
+										</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.sonatype.flexmojos
+										</groupId>
+										<artifactId>
+											flexmojos-maven-plugin
+										</artifactId>
+										<versionRange>
+											[3.8,)
+										</versionRange>
+										<goals>
+											<goal>compile-swf</goal>
+											<goal>
+												copy-flex-resources
+											</goal>
+											<goal>generate</goal>
+											<goal>test-compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.2,)
+										</versionRange>
+										<goals>
+											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>ISO-8859-1</encoding>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+	<properties>
+		<cargo.ajp.port>8045</cargo.ajp.port>
+		<server.port>8099</server.port>
+		<compileSource>1.6</compileSource>
+
+	</properties>
+
+	<modules>
+		<module>newArchetypeTest-java</module>
+		<module>newArchetypeTest-Ui</module>
+		<module>newArchetypeTest-gen</module>
+	</modules>
+	<profiles>
+		<profile>
+			<id>defaultProfile</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<tomcat.wait>false</tomcat.wait>
+			</properties>
+		</profile>
+		<profile>
+			<id>tomcat</id>
+			<properties>
+				<tomcat.wait>true</tomcat.wait>
+			</properties>
+		</profile>
+	</profiles>
+</project>
